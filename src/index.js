@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {Provider} from "react-redux";
+import {store} from "./store";
+import {formActions} from "./store/reducers/form/actions";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+// Для сохранения прогресса новых этапов достаточно добавить пару строк, аналогичных этим
+const currentStep = localStorage.getItem('currentStep');
+const loginPasswordForm = localStorage.getItem('loginPasswordForm');
+const locationForm = localStorage.getItem('locationForm');
+const phoneNumberForm = localStorage.getItem('phoneNumberForm');
+
+if (currentStep) store.dispatch(formActions.setCurrentStep(+currentStep))
+if (loginPasswordForm) store.dispatch(formActions.setFormValues('loginPasswordForm', JSON.parse(loginPasswordForm)));
+if (loginPasswordForm) store.dispatch(formActions.setFormValues('locationForm', JSON.parse(locationForm)));
+if (phoneNumberForm) store.dispatch(formActions.setFormValues('phoneNumberForm', JSON.parse(phoneNumberForm)));
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <React.StrictMode>
+        <Provider store={store}>
+            {store ? <App/> : <>Loading</>}
+        </Provider>
+    </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
